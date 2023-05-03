@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proyecto Final</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/logins.css">
+</head>
+    <body>
+        <div id="layout">
+            <header class="d-flex flex-column align-items-center justify-content-center">
+                <div>
+                    <h1 class="retro texto-centro mt-5" id="title">
+                        SUPER SPIKES MAN!
+                    </h1>
+                </div>
+            </header>
+            <main class="d-flex flex-column align-items-center justify-content-center">
+                <div class="d-flex containered-style flex-20 align-items-center justify-content-evenly mt-4 w-50 item-name">
+                    <div class="w-50 mt-3 d-flex flex-row align-items-center justify-content-evenly">
+                        <div>
+                            <p id="aliasUser" class="retro no-margin fs-4"></p>
+                        </div>
+                    </div>
+                    <div class="w-50 mt-3 d-flex flex-row align-items-center justify-content-center">
+                        <div>
+                            <p id="" class="retro no-margin fs-4"> SpikePoints: </p>
+                        </div>
+                        <div>
+                            <p id="spikePoints" class="retro no-margin fs-4"> </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="alinear-form color-fondo-azul d-flex flex-row justify-content-evenly align-items-center flex-80">
+                    <div class="containered-style items d-flex flex-column align-items-center justify-content-center">
+                        <div class="d-flex align-items-center justify-content-center animation">
+                            <img src="../resources/assets/spikes/spike-base.png" alt="spike without background" class="w-75" draggable="false">
+                        </div>
+                        <div class="d-flex align-items-center justify-content-center retro">
+                            <p class="fs-1"> Jugar </p>
+                        </div>
+                    </div>
+                    <div class="containered-style items d-flex flex-column align-items-center justify-content-center">
+                        <div class="d-flex align-items-center justify-content-center animation">
+                            <img src="../resources/assets/items-Menu/Shop.png" alt="shop" class="w-142" draggable="false">
+                        </div>
+                        <div class="d-flex align-items-center justify-content-center retro">
+                            <p class="fs-1"> Tienda </p>
+                        </div>
+                    </div>
+                    <div class="containered-style items d-flex flex-column align-items-center justify-content-center">
+                        <div class="d-flex align-items-center justify-content-center animation">
+                            <img src="../resources/assets/items-Menu/Ranking.png" alt="spike without background" class="w-75 margin-star" draggable="false">
+                        </div>
+                        <div class="d-flex align-items-center justify-content-center retro">
+                            <p class="fs-1"> Ranking </p>
+                        </div>
+                    </div>
+                    <div class="containered-style items d-flex flex-column align-items-center justify-content-center" id="exitElement">
+                        <div class="d-flex align-items-center justify-content-center m-23-0 animation">
+                            <img src="../resources/assets/items-Menu/Exit.png" alt="spike without background" class="w-75" draggable="false">
+                        </div>
+                        <div class="d-flex align-items-center justify-content-center retro">
+                            <p class="fs-1"> Salir </p>
+                        </div>
+                    </div>
+                </div>
+            </main>
+            <div id="animated">
+
+            </div>
+        </div>
+
+        <script src="../js/misAnimaciones.js"></script>
+        <script src="../js/gestionarExit.js" type="module"></script>
+        <script src="../js/titleScript.js"></script>
+        <script src="../js/gestionarPuntos.js"></script>
+    </body>
+</html>
