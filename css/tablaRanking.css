@@ -1,0 +1,29 @@
+table{
+    height: 70vh;
+}
+
+.miUsuario{
+   background-color:  rgba(0, 230, 0, 0.609);
+}
+
+.borde-tabla{
+    border-radius: 32px 32px 32px 32px;
+    -webkit-border-radius: 32px 32px 32px 32px;
+}
+
+.color-fondo-tabla{
+    background-color: rgb(220, 219, 219);
+}
+
+tr>th:nth-child(2n), tr>td:nth-child(2n){
+    border-left: 1px solid rgb(204, 204, 204);
+}
+
+tr>th:nth-child(3n), tr>td:nth-child(3n){
+    border-left: 1px solid rgb(204, 204, 204);
+    border-right: 1px solid rgb(204, 204, 204);
+}
+
+tr>td, tr>th{
+    height: 5vh;
+}

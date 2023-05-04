@@ -20,8 +20,9 @@
             $campos = mb_split("/", $data);
 
             switch ($campos) {
-                case (!empty($campos[1]) && $campos[1] == "cliente") && (!empty($campos[3]) && $campos[3] == "animal"):
-
+                case (!empty($campos[1]) && $campos[1] == "Ranking"):
+                    Ranking::getRanking();
+                    break;
                 default:
                     return header(ERROR["Bad Request"]);
                     break;

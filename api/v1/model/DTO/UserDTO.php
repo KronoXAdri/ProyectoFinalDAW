@@ -7,13 +7,15 @@
         public $correo;
         public $puntosCompra;
         public $skinEquipada;
+        public $admin;
 
-        function __construct($alias, $pais, $correo, $puntosCompra , $skinEquipada){
+        function __construct($alias, $pais, $correo, $puntosCompra , $skinEquipada, $admin){
             $this->alias = $alias;
             $this->pais = $pais;
             $this->correo = $correo;
             $this->puntosCompra = $puntosCompra;
             $this->skinEquipada = $skinEquipada;
+            $this->admin = $admin;
         }
 
         /**
@@ -112,6 +114,26 @@
         public function setPuntosCompra($puntosCompra)
         {
                 $this->puntosCompra = $puntosCompra;
+
+                return $this;
+        }
+
+        /**
+         * Get the value of admin
+         */ 
+        public function getAdmin()
+        {
+                return $this->admin;
+        }
+
+        /**
+         * Set the value of admin
+         *
+         * @return  self
+         */ 
+        public function setAdmin($admin)
+        {
+                $this->admin = $admin;
 
                 return $this;
         }

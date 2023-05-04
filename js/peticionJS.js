@@ -12,7 +12,6 @@ function gestionarPeticion(e) {
     fetch(url)
     .then(respuesta => respuesta.json())
     .then(respuesta => {
-            console.log(respuesta);
             sessionStorage.setItem("usuario", JSON.stringify(respuesta));
             window.location="src/main.html";
     }).catch(error => {

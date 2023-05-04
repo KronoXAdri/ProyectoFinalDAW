@@ -19,7 +19,7 @@
                 </div>
             </header>
             <main class="d-flex flex-column align-items-center justify-content-center">
-                <div class="d-flex containered-style flex-20 align-items-center justify-content-evenly mt-4 w-50 item-name">
+                <div class="w-50 d-flex containered-style align-items-center justify-content-evenly mt-4 item-name">
                     <div class="w-50 mt-3 d-flex flex-row align-items-center justify-content-evenly">
                         <div>
                             <p id="aliasUser" class="retro no-margin fs-4"></p>
@@ -34,7 +34,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="alinear-form color-fondo-azul d-flex flex-row justify-content-evenly align-items-center flex-80">
+                <div class="alinear-form color-fondo-azul d-flex flex-row justify-content-evenly align-items-center w-100">
                     <div class="containered-style items d-flex flex-column align-items-center justify-content-center">
                         <div class="d-flex align-items-center justify-content-center animation">
                             <img src="../resources/assets/spikes/spike-base.png" alt="spike without background" class="w-75" draggable="false">
@@ -43,7 +43,7 @@
                             <p class="fs-1"> Jugar </p>
                         </div>
                     </div>
-                    <div class="containered-style items d-flex flex-column align-items-center justify-content-center">
+                    <div class="containered-style items d-flex flex-column align-items-center justify-content-center" id="tienda">
                         <div class="d-flex align-items-center justify-content-center animation">
                             <img src="../resources/assets/items-Menu/Shop.png" alt="shop" class="w-142" draggable="false">
                         </div>
@@ -51,7 +51,7 @@
                             <p class="fs-1"> Tienda </p>
                         </div>
                     </div>
-                    <div class="containered-style items d-flex flex-column align-items-center justify-content-center">
+                    <div class="containered-style items d-flex flex-column align-items-center justify-content-center" id="rankingElement">
                         <div class="d-flex align-items-center justify-content-center animation">
                             <img src="../resources/assets/items-Menu/Ranking.png" alt="spike without background" class="w-75 margin-star" draggable="false">
                         </div>
@@ -69,14 +69,13 @@
                     </div>
                 </div>
             </main>
-            <div id="animated">
-
-            </div>
         </div>
 
         <script src="../js/misAnimaciones.js"></script>
         <script src="../js/gestionarExit.js" type="module"></script>
+        <script src="../js/gestionarRanking.js" type="module"></script>
+        <script src="../js/gestionarTienda.js" type="module"></script>
         <script src="../js/titleScript.js"></script>
-        <script src="../js/gestionarPuntos.js"></script>
+        <script src="../js/gestionarMenuUserPuntos.js"></script>
     </body>
 </html>

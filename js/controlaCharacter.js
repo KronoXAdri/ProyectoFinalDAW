@@ -28,9 +28,4 @@ function charge() {
 }
 
 
-
-
-
-
-
 window.addEventListener("DOMContentLoaded", chargeImage);
