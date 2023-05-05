@@ -3,14 +3,21 @@ const botonIzquierdo = document.querySelector("#BotonIzquierdo");
 const botonDerecho = document.querySelector("#BotonDerecho");
 
 let pagActual = 1;
-let totalPag = 4;
+let totalPag = 2;
 
-paginas.textContent = pagActual + " de " + totalPag;
+function initFlechas() {
+    paginas.textContent = pagActual + " de " + totalPag;
 botonIzquierdo.style.visibility = "hidden";
+
+if(pagActual == totalPag){
+    botonDerecho.style.visibility = "hidden";
+}
+}
 
 function saltoPagina(e) {
     if(e.currentTarget.id == "BotonIzquierdo"){
         pagActual -= 1;
+
         if (pagActual == 1) {
             botonIzquierdo.removeEventListener("click", saltoPagina);
             setTimeout(() => 
@@ -21,12 +28,10 @@ function saltoPagina(e) {
             botonDerecho.style.visibility = "visible";
             botonDerecho.addEventListener("click", saltoPagina);
         }
-        if(pagActual == totalPag){
-            botonDerecho.removeEventListener("click", saltoPagina);
-            setTimeout(() => 
-            botonIzquierdo.style.visibility = "hidden",600);
+        if (pagActual < totalPag) {
+            botonDerecho.style.visibility = "visible";
+            botonDerecho.addEventListener("click", saltoPagina);
         }
-
     }
     if(e.currentTarget.id == "BotonDerecho"){
         pagActual += 1;
@@ -45,5 +50,5 @@ function saltoPagina(e) {
 }
 
 
-
+document.addEventListener("DOMContentLoaded", initFlechas)
 botonDerecho.addEventListener("click", saltoPagina);
