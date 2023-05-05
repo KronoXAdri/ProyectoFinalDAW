@@ -1,4 +1,5 @@
 const listaItems = document.querySelectorAll(".tag-shop");
+const listaBotonesSup = document.querySelectorAll(".tag-shop");
 
 let isAnimated = false;
 
@@ -14,7 +15,7 @@ function animarItems(e) {
         if (isAnimated) {
             limpiarItems();
         }
-    },1100);
+    },600);
 }
 
 
