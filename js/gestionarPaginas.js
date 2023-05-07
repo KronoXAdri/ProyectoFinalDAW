@@ -3,7 +3,7 @@ const botonIzquierdo = document.querySelector("#BotonIzquierdo");
 const botonDerecho = document.querySelector("#BotonDerecho");
 
 let pagActual = 1;
-let totalPag = 2;
+let totalPag = 7;
 
 function initFlechas() {
     paginas.textContent = pagActual + " de " + totalPag;
