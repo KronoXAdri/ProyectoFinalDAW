@@ -20,6 +20,42 @@
                 echo "En la línea "  . $e->getLine() . ' en el archivo ' . $e->getFile() . ': <br>';
                 echo "<br>Mensaje de error:" . $e->getMessage();
             }
+        }
+
+        public static function existsUserByAlias($alias){
+            try {
+                $sql = "SELECT * FROM usuario WHERE alias=:alias;";
+         
+                $consulta = Conectar::conexion()->prepare($sql);
+                $consulta->bindParam(":alias", $alias);
+                $consulta->execute();
+            
+                while ($filas = $consulta->fetch(PDO::FETCH_ASSOC)) {
+                    $datos[] = $filas;
+                }
+                $consulta->closeCursor();
+                return (!empty($datos))? $datos : false;
+                
+            } catch (Throwable $e) {
+                echo "En la línea "  . $e->getLine() . ' en el archivo ' . $e->getFile() . ': <br>';
+                echo "<br>Mensaje de error:" . $e->getMessage();
+            }
+        }
+
+        public static function updateSkinEquiped($idSkin, $userId){
+            try {
+                $sql = "UPDATE `usuario` SET usuario.skin_equipada = :idSkin WHERE usuario.id_usuario = :userId;";
+         
+                $consulta = Conectar::conexion()->prepare($sql);
+                $consulta->bindParam(":idSkin", $idSkin);
+                $consulta->bindParam(":userId", $userId);
+                $consulta->execute();
+                $consulta->closeCursor();
+                
+            } catch (Throwable $e) {
+                echo "En la línea "  . $e->getLine() . ' en el archivo ' . $e->getFile() . ': <br>';
+                echo "<br>Mensaje de error:" . $e->getMessage();
+            }
         
         }
 

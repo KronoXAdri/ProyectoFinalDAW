@@ -4,10 +4,18 @@ const botonDerecho = document.querySelector("#BotonDerecho");
 
 let pagActual = 1;
 let totalPag;
+let noChecked = false;
 
 function initFlechas() {
 
-    const url = "http://localhost/proyectoFinal/api/v1/superSpikes/Shop/Items";
+    let url = "";
+
+    if(!noChecked){
+        url = "http://localhost/proyectoFinal/api/v1/superSpikes/Shop/Items";
+    }else{
+        const datosSesion = JSON.parse(sessionStorage.getItem("usuario")).usuario;
+        url = `http://localhost/proyectoFinal/api/v1/superSpikes/Shop/ItemsBougths?correo=${datosSesion.correo}`; 
+    }
 
     fetch(url)
     .then(respuesta => respuesta.json())
@@ -70,9 +78,13 @@ botonDerecho.addEventListener("click", saltoPagina);
 
 /* GESTION DE CARGA DE ITEMS */
 
-const itemsTienda = document.querySelectorAll(".item-shop-rellenar");
+let itemsTienda = document.querySelectorAll(".item-shop-rellenar");
 let primerItem;
 let numItems = 8;
+
+function initItemsTienda() {
+    itemsTienda = document.querySelectorAll(".item-shop-rellenar");
+}
 
 function cargarItems() {
 
@@ -83,7 +95,10 @@ function cargarItems() {
     fetch(url)
     .then(respuesta => respuesta.json())
     .then(respuesta => {
+        if(!noChecked){
             rellenarItems(respuesta.skins);
+
+        }
     }).catch(error => {
         console.error(error);
     });
@@ -92,9 +107,6 @@ function cargarItems() {
 function rellenarItems(items) {
 
     let posDiv = 0;
-    for (let i = posDiv; i < itemsTienda.length; i++) {
-        itemsTienda[i].style.visibility = "visible";
-    }
     mostrarItems(posDiv);
     vaciarItemsTienda();
 
@@ -106,16 +118,52 @@ function rellenarItems(items) {
 
         itemsTienda[posDiv].innerHTML = elementoImagen;
 
-        const elementoTexto = `<div class="w-100 h-3 d-flex align-items-center justify-content-center">
-                               <p class="fs-6 no-margin me-3"> ${element.nombre} </p>
-                               <p class="fs-6 no-margin ms-3"> ${element.precio} SP </p>
-                               </div> `;
+        let elementoTexto = "";
+
+        if(itemsTienda[posDiv].classList.contains("div"+(posDiv+1)+"-equipados")){
+            elementoTexto = `<div class="w-100 h-3 d-flex align-items-center justify-content-center">
+                                <p class="fs-6 no-margin me-3"> ${element.nombre} </p>
+                            </div> `;
+
+            const elemComprados = document.querySelectorAll(".item-shop-animation-bougths");
+            elemComprados.forEach(elem => elem.addEventListener("click", equiparSkin));
+
+        }else{
+            elementoTexto = `<div class="w-100 h-3 d-flex align-items-center justify-content-center">
+                                <p class="fs-6 no-margin me-3"> ${element.nombre} </p>
+                                <p class="fs-6 no-margin ms-3"> ${element.precio} SP </p>
+                            </div> `;
+        }
 
         itemsTienda[posDiv].innerHTML += elementoTexto;
         posDiv += 1;
     });
 
     ocultarItems(posDiv);
+}
+
+function equiparSkin(e) {
+    let nombreItem = e.currentTarget.children[1].children[0].textContent;
+    let datosSesion = JSON.parse(sessionStorage.getItem("usuario")).usuario;
+
+    nombreItem = nombreItem.trimStart();
+    nombreItem = nombreItem.trimEnd();
+    datosSesion.alias = datosSesion.alias.trimStart();
+    datosSesion.alias = datosSesion.alias.trimEnd();
+
+    const body = { 
+        method: 'PUT'
+    };
+    const urlSkin = `http://localhost/proyectoFinal/api/v1/superSpikes/Shop/UserSkinEquiped?nombreItem=${nombreItem}&alias=${datosSesion.alias}`;
+
+    fetch(urlSkin, body)
+    .then(respuesta => respuesta.json())
+    .then(respuesta => {
+            console.log(respuesta.skinEquipada);
+            rellenarSkinEquipada(respuesta.skinEquipada);
+    }).catch(error => {
+        console.error(error);
+    });
 }
 
 function vaciarItemsTienda(){
@@ -162,7 +210,6 @@ const miSkin = document.querySelector(".my-skin");
 
 function cargarMiSKin() {
     const datosSesion = JSON.parse(sessionStorage.getItem("usuario")).usuario;
-    console.log(datosSesion);
 
     const urlSkin = `http://localhost/proyectoFinal/api/v1/superSpikes/Shop/UserSkinEquiped?correo=${datosSesion.correo}`;
 
@@ -177,23 +224,131 @@ function cargarMiSKin() {
 
 function rellenarSkinEquipada(skin) {
     const textoEquipado = `<div class="w-100 h-3 d-flex align-items-center justify-content-center texto-centro mt-5">
-            <p class="fs-5 no-margin"> SKIN EQUIPADA</p>
-            </div> `;
+                                <p class="fs-5 no-margin"> SKIN EQUIPADA</p>
+                            </div> `;
 
     miSkin.innerHTML = textoEquipado;
 
     const elementoImagen = `<div class="w-100 h-30 d-flex flex-row align-items-center justify-content-center">
-    <img src="../resources/assets/character/${skin.nombre}/Animated/Walk1.png" alt="${skin.nombre}" class="h-40 w-50" draggable="false">
-    </div>`;
+                                <img src="../resources/assets/character/${skin.nombre}/Animated/Walk1.png" alt="${skin.nombre}" class="h-40 w-50" draggable="false">
+                            </div>`;
 
     miSkin.innerHTML += elementoImagen;
 
     const elementoTexto = `<div class="w-100 h-3 d-flex align-items-center justify-content-center">
-            <p class="fs-6 no-margin"> ${skin.nombre} </p>
-            </div> `;
+                                <p class="fs-6 no-margin"> ${skin.nombre} </p>
+                            </div> `;
 
     miSkin.innerHTML += elementoTexto;
 }
 
 
 document.addEventListener("DOMContentLoaded", cargarMiSKin);
+
+
+/* GESTIONAR EN PROPIEDAD */
+const buttonCheck = document.querySelector("#imagenCheck")
+
+const imagenCheck = document.createElement("img");
+imagenCheck.src = "../resources/backgrounds/Checks/Check.png";
+imagenCheck.alt = "Check verde";
+imagenCheck.classList.add("w-100");
+imagenCheck.classList.add("h-100");
+imagenCheck.draggable = false;
+
+function initCompradas() {
+    const datosSesion = JSON.parse(sessionStorage.getItem("usuario")).usuario;
+    const urlSkin = `http://localhost/proyectoFinal/api/v1/superSpikes/Shop/UserSkinBougths?correo=${datosSesion.correo}`;
+
+    fetch(urlSkin)
+    .then(respuesta => respuesta.json())
+    .then(respuesta => {
+        rellenarItems(respuesta.skinsEquipada);
+    }).catch(error => {
+        console.error(error);
+    });
+}
+
+function reiniciarLayoutComprados() {
+    const parentGrid = document.querySelector(".parent-grid");
+    parentGrid.classList.remove("parent-grid");
+    parentGrid.classList.add("parent-grid-equipados");
+
+    const divs = document.querySelectorAll(".elem-layout");
+
+    for (let i = 0; i < divs.length; i++) {
+        if(i == 0){
+            divs[i].innerHTML = "";
+            divs[i].classList.remove("div"+[i+1]);
+            divs[i].classList.add("div"+[i+1]+"-equipados");
+            divs[i].classList.add("item-shop-rellenar");
+            divs[i].classList.add("item-shop-animation-bougths");
+        }else if(i == 5 || i == 6){
+
+        }else{
+            divs[i].innerHTML = "";
+            divs[i].classList.remove("div"+[i+1]);
+            divs[i].classList.add("div"+[i+1]+"-equipados");
+            divs[i].classList.add("item-shop-animation-bougths");
+        }
+        
+    }
+}
+function reiniciarLayoutTienda() {
+    const parentGrid = document.querySelector(".parent-grid-equipados");
+    parentGrid.classList.remove("parent-grid-equipados");
+    parentGrid.classList.add("parent-grid");
+
+    const divs = document.querySelectorAll(".elem-layout");
+
+    for (let i = 0; i < divs.length; i++) {
+        if(i == 0){
+            divs[i].classList.remove("div"+[i+1]+"-equipados");
+            divs[i].classList.remove("item-shop-rellenar");
+            divs[i].classList.remove("item-shop-animation-bougths");
+            divs[i].innerHTML = `<div class="w-75 h-30 d-flex flex-row align-items-center justify-content-center">
+                                    <img src="../resources/backgrounds/Chests/Cofre.png" alt="LootBox" class="h-20" draggable="false">
+                                </div>
+                                <div class="w-100 h-3 d-flex flex-row align-items-center justify-content-center">
+                                    <p class="fs-2 no-margin me-3"> Cofre </p>
+                                    <p class="fs-2 no-margin ms-3"> 1025 SP </p>
+                                </div> `;
+            divs[i].classList.add("div"+[i+1]);
+        }else if(i == 5 || i == 6){
+
+        }else{
+            divs[i].innerHTML = "";
+            divs[i].classList.remove("div"+[i+1]+"-equipados");
+            divs[i].classList.remove("item-shop-animation-bougths");
+            divs[i].classList.add("div"+[i+1]);
+        }
+        
+    }
+}
+
+function gestionarEnPropiedad() {
+
+    pagActual = 1;
+    if(!noChecked){
+        noChecked = true;
+        initFlechas();
+        buttonCheck.appendChild(imagenCheck);
+        mostrarItems(0);
+        reiniciarLayoutComprados();
+        initItemsTienda();
+        initCompradas();
+    }else{
+        noChecked = false;
+        initFlechas();
+        reiniciarLayoutTienda();
+        initItemsTienda();
+        buttonCheck.removeChild(imagenCheck);
+        botonIzquierdo.removeEventListener("click", saltoPagina);
+        botonDerecho.addEventListener("click", saltoPagina);
+        botonDerecho.style.visibility = "visible";
+        botonIzquierdo.style.visibility = "hidden";
+    }
+
+}
+
+buttonCheck.addEventListener("click", gestionarEnPropiedad);

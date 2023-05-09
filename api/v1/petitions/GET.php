@@ -75,8 +75,12 @@
 
             if($nombresVarQuery == "p;numItems" && $camposPath[1] == "Shop" && $camposPath[2] == "Items"){
                     Item::getSkins($valoresQuery);
-            }if($nombresVarQuery == "correo" && $camposPath[1] == "Shop" && $camposPath[2] == "UserSkinEquiped"){
+            }elseif($nombresVarQuery == "correo" && $camposPath[1] == "Shop" && $camposPath[2] == "UserSkinEquiped"){
                     Item::getSkinEquiped($valoresQuery);
+            }elseif($nombresVarQuery == "correo" && $camposPath[1] == "Shop" && $camposPath[2] == "UserSkinBougths"){
+                    Item::getSkinBougths($valoresQuery);
+            }elseif($nombresVarQuery == "correo" && $camposPath[1] == "Shop" && $camposPath[2] == "ItemsBougths"){
+                    Item::getItemsBougths($valoresQuery);
             }else{
                 return header(ERROR["Bad Request"]);
             }

@@ -42,19 +42,59 @@
             }
         }
 
+        private static function getTotalItemsBougth($idUsuario){
+            try {
+                $sql = "SELECT COUNT(*) as 'numTotal' FROM usuarioskin where usuarioskin.id_usuario = :idUsuario";
+         
+                $consulta = Conectar::conexion()->prepare($sql);
+                $consulta->bindParam(":idUsuario", $idUsuario);
+                $consulta->execute();
+            
+                $datos = $consulta->fetch(PDO::FETCH_ASSOC);
+                
+                $consulta->closeCursor();
+                return (!empty($datos))? $datos : false;
+                
+            } catch (Throwable $e) {
+                echo "En la línea "  . $e->getLine() . ' en el archivo ' . $e->getFile() . ': <br>';
+                echo "<br>Mensaje de error:" . $e->getMessage();
+            }
+        }
+
         private static function hasSkinUser($idUsuario, $idSkin){
             try {
                 $sql = "SELECT * FROM usuarioskin where usuarioskin.id_usuario = :idUsuario and usuarioskin.id_skin = :idSkin";
          
                 $consulta = Conectar::conexion()->prepare($sql);
                 $consulta->bindParam(":idUsuario", $idUsuario);
-                $consulta->bindParam(":idSkin", $idSkin) ;
+                $consulta->bindParam(":idSkin", $idSkin);
                 $consulta->execute();
             
                 $datos = $consulta->fetch(PDO::FETCH_ASSOC);
                 
                 $consulta->closeCursor();
                 return (!empty($datos))? true : false;
+                
+            } catch (Throwable $e) {
+                echo "En la línea "  . $e->getLine() . ' en el archivo ' . $e->getFile() . ': <br>';
+                echo "<br>Mensaje de error:" . $e->getMessage();
+            }
+        }
+
+        private static function getSkinsUser($idUsuario){
+            try {
+                $sql = "SELECT * FROM usuarioskin where usuarioskin.id_usuario = :idUsuario";
+         
+                $consulta = Conectar::conexion()->prepare($sql);
+                $consulta->bindParam(":idUsuario", $idUsuario);
+                $consulta->execute();
+            
+                while ($filas = $consulta->fetch(PDO::FETCH_ASSOC)) {
+                    $datos[] = $filas;
+                }
+                
+                $consulta->closeCursor();
+                return (!empty($datos))? $datos : false;
                 
             } catch (Throwable $e) {
                 echo "En la línea "  . $e->getLine() . ' en el archivo ' . $e->getFile() . ': <br>';
@@ -104,6 +144,25 @@
             }
         }
 
+        public static function getSkinDataByName($nombreSkin){
+            try {
+                $sql = "SELECT * FROM skin where nombre = :nombreSkin;";
+         
+                $consulta = Conectar::conexion()->prepare($sql);
+                $consulta->bindParam(":nombreSkin", $nombreSkin) ;
+                $consulta->execute();
+            
+                $datos = $consulta->fetch(PDO::FETCH_ASSOC);
+                
+                $consulta->closeCursor();
+                return (!empty($datos))? $datos : false;
+                
+            } catch (Throwable $e) {
+                echo "En la línea "  . $e->getLine() . ' en el archivo ' . $e->getFile() . ': <br>';
+                echo "<br>Mensaje de error:" . $e->getMessage();
+            }
+        }
+
         public static function getCountItems(){
 
             if(!self::getTotalSkinsCharacter()){
@@ -111,6 +170,26 @@
             }
 
             $totalItems = self::getTotalSkinsCharacter();
+
+            echo json_encode(array("total" => $totalItems));
+            return header(ERROR["OK"]);
+        }
+
+        public static function getItemsBougths($datos){
+
+            $datosRecibidos = mb_split(";", $datos);
+            $correo = $datosRecibidos[0];
+            $datosUser = User::existsUser($correo);
+
+            if(empty($datosUser)){
+                return header(ERROR["No Content"]);
+            }
+
+            $totalItems = self::getTotalItemsBougth($datosUser[0]["ID_USUARIO"]);
+
+            if(!$totalItems){
+                return header(ERROR["No Content"]);
+            }
 
             echo json_encode(array("total" => $totalItems));
             return header(ERROR["OK"]);
@@ -139,6 +218,55 @@
 
             $skin = new ItemDTO($skinDatos["NOMBRE"], $skinDatos["TIPO"], $skinDatos["PRECIO"]);
 
+            echo json_encode(array("skinEquipada" => $skin));
+            return header(ERROR["OK"]);
+        }
+
+        public static function getSkinBougths($datos){
+            $datosRecibidos = mb_split(";", $datos);
+
+            $correo = $datosRecibidos[0];
+
+            $datosUser = User::existsUser($correo);
+
+            if(empty($datosUser)){
+                return header(ERROR["No Content"]);
+            }
+
+            $skinsUser = self::getSkinsUser($datosUser[0]["ID_USUARIO"]);
+
+            if(!$skinsUser){
+                return header(ERROR["No Content"]);
+            }
+
+            $listaSkins = [];
+                
+            foreach ($skinsUser as $dataCompra) {
+                $datosSkin = self::getSkinData($dataCompra["ID_SKIN"]);
+                $skin = new ItemDTO($datosSkin["NOMBRE"], $datosSkin["TIPO"], "");
+                array_push($listaSkins, $skin);
+            }
+
+            echo json_encode(array("skinsEquipada" => $listaSkins));
+            return header(ERROR["OK"]);
+        }
+
+        public static function putSkins($datos){
+            $datosRecibidos = mb_split(";", $datos);
+
+            $nombreSkin = $datosRecibidos[0];
+            $aliasUser = $datosRecibidos[1];
+
+            if(!User::existsUserByAlias($aliasUser)){
+                return header(ERROR["No Content"]);
+            }
+
+            $userData = User::existsUserByAlias($aliasUser);
+            $skinData = self::getSkinDataByName($nombreSkin);           
+
+            User::updateSkinEquiped($skinData["ID_SKIN"], $userData[0]["ID_USUARIO"]);
+
+            $skin = new ItemDTO($skinData["NOMBRE"], $skinData["TIPO"], 0);
             echo json_encode(array("skinEquipada" => $skin));
             return header(ERROR["OK"]);
         }

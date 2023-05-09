@@ -1,5 +1,5 @@
 const listaItems = document.querySelectorAll(".tag-shop");
-const listaItemsShop = document.querySelectorAll(".item-shop");
+let listaItemsShop = document.querySelectorAll(".item-shop");
 
 const popUp = document.querySelector("#popup")
 
@@ -34,38 +34,41 @@ function limpiarItems(){
 }
 
 function gestionarPopUpYCompra(e) {
-    popUp.style.visibility = "visible"
-
-    const cerrar = document.querySelectorAll(".cerrar");
-
-    cerrar.forEach(boton =>{
-        boton.addEventListener("click", () => popUp.style.visibility = "hidden");
-    })
-
-    const imagenItem = document.querySelector("#imagenItem");
-    imagenItem.innerHTML = "";
-    const imagenInsertar = document.createElement("img");
-    imagenInsertar.src = e.currentTarget.children[0].children[0].src;
-    imagenInsertar.alt = "LootBox";
-    imagenInsertar.classList.add("h-20");
-    imagenInsertar.draggable = false;
-    imagenItem.appendChild(imagenInsertar);
-
-    const descripcionItem = document.querySelector("#descripcionItem");
-    descripcionItem.innerHTML = "";
-    const nombreItem = document.createElement("p");
-    nombreItem.classList.add("fs-2");
-    nombreItem.classList.add("no-margin");
-    nombreItem.classList.add("me-3");
-    nombreItem.textContent = e.currentTarget.children[1].children[0].textContent;
-    descripcionItem.appendChild(nombreItem);
-
-    const precioItem = document.createElement("p");
-    precioItem.classList.add("fs-2");
-    precioItem.classList.add("no-margin");
-    precioItem.classList.add("me-3");
-    precioItem.textContent = e.currentTarget.children[1].children[1].textContent;
-    descripcionItem.appendChild(precioItem);
+    if(!e.currentTarget.classList.contains("item-shop-animation-bougths")){
+        popUp.style.visibility = "visible";
+        listaItemsShop = document.querySelectorAll(".item-shop");
+    
+        const cerrar = document.querySelectorAll(".cerrar");
+    
+        cerrar.forEach(boton =>{
+            boton.addEventListener("click", () => popUp.style.visibility = "hidden");
+        })
+    
+        const imagenItem = document.querySelector("#imagenItem");
+        imagenItem.innerHTML = "";
+        const imagenInsertar = document.createElement("img");
+        imagenInsertar.src = e.currentTarget.children[0].children[0].src;
+        imagenInsertar.alt = "LootBox";
+        imagenInsertar.classList.add("h-20");
+        imagenInsertar.draggable = false;
+        imagenItem.appendChild(imagenInsertar);
+    
+        const descripcionItem = document.querySelector("#descripcionItem");
+        descripcionItem.innerHTML = "";
+        const nombreItem = document.createElement("p");
+        nombreItem.classList.add("fs-2");
+        nombreItem.classList.add("no-margin");
+        nombreItem.classList.add("me-3");
+        nombreItem.textContent = e.currentTarget.children[1].children[0].textContent;
+        descripcionItem.appendChild(nombreItem);
+    
+        const precioItem = document.createElement("p");
+        precioItem.classList.add("fs-2");
+        precioItem.classList.add("no-margin");
+        precioItem.classList.add("me-3");
+        precioItem.textContent = e.currentTarget.children[1].children[1].textContent;
+        descripcionItem.appendChild(precioItem);
+    }
 
 }
 
