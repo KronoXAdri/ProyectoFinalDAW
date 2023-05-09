@@ -2,7 +2,7 @@ const tabla = document.querySelector(".table");
 
 function rellenarTabla() {
 
-    url = "http://localhost/proyectoFinal/api/v1/superSpikes/Ranking";
+    const url = "http://localhost/proyectoFinal/api/v1/superSpikes/Ranking";
 
     fetch(url)
     .then(respuesta => respuesta.json())

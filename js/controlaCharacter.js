@@ -1,6 +1,6 @@
 const frame = document.querySelector("#animated");
 
-const path = "resources/assets/character/2/Animated/";
+const path = "resources/assets/character/Character2/Animated/";
 let numberImage = 1;
 
 function chargeImage() {    
