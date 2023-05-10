@@ -125,7 +125,7 @@ function rellenarItems(items) {
                                 <p class="fs-6 no-margin me-3"> ${element.nombre} </p>
                             </div> `;
 
-            const elemComprados = document.querySelectorAll(".item-shop-animation-bougths");
+            elemComprados = document.querySelectorAll(".item-shop-animation-bougths");
             elemComprados.forEach(elem => elem.addEventListener("click", equiparSkin));
 
         }else{
@@ -159,7 +159,6 @@ function equiparSkin(e) {
     fetch(urlSkin, body)
     .then(respuesta => respuesta.json())
     .then(respuesta => {
-            console.log(respuesta.skinEquipada);
             rellenarSkinEquipada(respuesta.skinEquipada);
     }).catch(error => {
         console.error(error);
@@ -247,7 +246,9 @@ document.addEventListener("DOMContentLoaded", cargarMiSKin);
 
 
 /* GESTIONAR EN PROPIEDAD */
-const buttonCheck = document.querySelector("#imagenCheck")
+const buttonCheck = document.querySelector("#imagenCheck");
+
+let elemComprados=null;
 
 const imagenCheck = document.createElement("img");
 imagenCheck.src = "../resources/backgrounds/Checks/Check.png";
@@ -298,6 +299,8 @@ function reiniciarLayoutTienda() {
     const parentGrid = document.querySelector(".parent-grid-equipados");
     parentGrid.classList.remove("parent-grid-equipados");
     parentGrid.classList.add("parent-grid");
+
+    elemComprados.forEach(elem => elem.removeEventListener("click", equiparSkin));
 
     const divs = document.querySelectorAll(".elem-layout");
 
