@@ -2,13 +2,17 @@
 
     class POST{
         public static function gestionarPost(){
-
+            
             if(empty($_SERVER["QUERY_STRING"]) && (isset($_SERVER["PATH_INFO"]) && !empty($_SERVER["PATH_INFO"]))){
                 $data = json_decode(file_get_contents("php://input"));
                 self::postConPath($data);
             }elseif(empty($_SERVER["QUERY_STRING"]) && !empty($_SERVER["PATH_INFO"])){
                 $data = json_decode(file_get_contents("php://input"));
                 self::postConQuery($data);
+            }elseif(!empty($_SERVER["QUERY_STRING"]) && !empty($_SERVER["PATH_INFO"])){
+                $dataQuery = $_SERVER["QUERY_STRING"];
+                $dataPath = $_SERVER["PATH_INFO"];
+                self::gestionarAmbos($dataQuery, $dataPath);
             }else{
                 return header(ERROR["No Content"]);
             }
@@ -16,77 +20,46 @@
         }
 
 
-        private static function postConPath($datos){            
-            $ruta = mb_split("/", $_SERVER["PATH_INFO"]);
+        private static function postConPath($datos){        
+            $campos = mb_split("/", $datos);
 
-            switch($ruta){
-                case (!empty($ruta[1] && $ruta[1] == "login")):
-                    self::postLogin($datos);
+            switch($campos){
+                default:
+                    return header(ERROR["Bad Request"]);
                     break;
-                case (!empty($ruta[1] && $ruta[1] == "cliente")):
-                    self::postAniCliente($datos, $ruta);
-                    break;
-                default;
-                    
             }
         }
 
         private static function postConQuery($datos){
+            return header(ERROR["Bad Request"]);
         }
 
-        private static function postAniCliente($datos, $ruta){
-            Funcionalidades::devolverToken($token);
+        private static function gestionarAmbos($dataQuery, $dataPath){
+            $query = mb_split("&", $dataQuery);
+            $nombresVarQuery = "";
+            $valoresQuery = "";
 
-            if($ruta[2] != $token["id"]){
-                return header(ERROR["Bad Request"]);
+            foreach ($query as $campoQuery) {
+                $valoresQuery = $valoresQuery . mb_split("=", $campoQuery)[1] . ";";
+                $nombresVarQuery = $nombresVarQuery . mb_split("=", $campoQuery)[0] . ";";
             }
-            if(time() > $token["exp"]){
-                return header(ERROR["Bad Request"]);
-            }
-            if(empty($datos->imagenAnimal)){
-                $datos->imagenAnimal = "default.jpg";
-            }else{
-                $datos->imagenAnimal = Funcionalidades::base64_datos($datos->imagenAnimal,"../../resources/img/animales/",$datos->nomAnimal);
-            }
-            $datos->idCliente = $token["id"];
-
-            $idUltimoAni = Registro::insertarMascotaPOST($datos);
-
-            $datosConsutaMascota = Mascotas::extraerMascotaNumHistorial($idUltimoAni);
-            $path = mb_split("/",dirname($_SERVER['SCRIPT_NAME']));
-            $ruta = 'http://'.$_SERVER['SERVER_NAME']."/".$path[1]."/".$path[2]."/resources/img/animales/";
-            $datosFotografias = [];
-            $datosConsultaFotos = Mascotas::extraerTodasFotoObject($datosConsutaMascota->NumHistorial); 
-            foreach ($datosConsultaFotos as $foto) {
-                $nombreFotoAni = $ruta.$foto->nombreFoto;
-                $datosFotografias[] = $nombreFotoAni;
-            }
-            $animal = new AnimalStatic($idUltimoAni,$datosConsutaMascota->NomAnimal,$datosConsutaMascota->idTipo,$datosConsutaMascota->NombreTipo, $datosFotografias);
             
+            $nombresVarQuery = substr($nombresVarQuery, 0, -1);
+            $valoresQuery = substr($valoresQuery, 0, -1);
+            $camposPath = mb_split("/", $dataPath);
 
-            echo json_encode(array("animal" => $animal));
-        }
-
-        private static function postLogin($datos){
-            $alias = $datos->alias;
-            $password = $datos->contraseña;
-
-            if(is_numeric($alias) || $password < 0){
+            if($nombresVarQuery == "alias" && $camposPath[1] == "Shop" && $camposPath[2] == "SkinBougth"){
+                $data = json_decode(file_get_contents('php://input'), true);
+                
+                if(empty($data) || (!isset($data["nombre"]) || empty($data["nombre"]) || (!isset($data["nombre"]) || empty($data["precio"])))){
+                    return header(ERROR["Bad Request"]);
+                }
+                    Item::bougthSkin($data,$valoresQuery);
+            }else{
                 return header(ERROR["Bad Request"]);
             }
 
-            $consulta = Usuario::existsUser($alias);
-
-            if(!$consulta){
-                return header(ERROR["Not Found"]);
-            }
-            if(!password_verify($password, $consulta[0]["clave"])){
-                return header(ERROR["Not Found"]);
-            }
-
-            Funcionalidades::crearTokenJWT($consulta[0]["idcliente"],$alias, "usuario");
         }
-
-    }
+}
 
 ?> 

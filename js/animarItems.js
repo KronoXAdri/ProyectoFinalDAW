@@ -38,21 +38,15 @@ function gestionarPopUpYCompra(e) {
         popUp.style.visibility = "visible";
         listaItemsShop = document.querySelectorAll(".item-shop");
     
-        const cerrar = document.querySelectorAll(".cerrar");
-    
-        cerrar.forEach(boton =>{
-            boton.addEventListener("click", () => popUp.style.visibility = "hidden");
-        })
-    
         const imagenItem = document.querySelector("#imagenItem");
         imagenItem.innerHTML = "";
         const imagenInsertar = document.createElement("img");
         imagenInsertar.src = e.currentTarget.children[0].children[0].src;
-        imagenInsertar.alt = "LootBox";
+        imagenInsertar.alt = e.currentTarget.children[1].children[0].textContent;
         imagenInsertar.classList.add("h-20");
         imagenInsertar.draggable = false;
         imagenItem.appendChild(imagenInsertar);
-    
+        
         const descripcionItem = document.querySelector("#descripcionItem");
         descripcionItem.innerHTML = "";
         const nombreItem = document.createElement("p");
@@ -61,14 +55,63 @@ function gestionarPopUpYCompra(e) {
         nombreItem.classList.add("me-3");
         nombreItem.textContent = e.currentTarget.children[1].children[0].textContent;
         descripcionItem.appendChild(nombreItem);
-    
+        
         const precioItem = document.createElement("p");
         precioItem.classList.add("fs-2");
         precioItem.classList.add("no-margin");
         precioItem.classList.add("me-3");
         precioItem.textContent = e.currentTarget.children[1].children[1].textContent;
         descripcionItem.appendChild(precioItem);
+
+        const cerrar = document.querySelectorAll(".cerrar");
+        const comprar = document.querySelector(".si-compra");
+
+        comprar.addEventListener("click", gestionarCompra);
+    
+        cerrar.forEach(boton =>{
+            boton.addEventListener("click", () => popUp.style.visibility = "hidden");
+        })
     }
+
+}
+
+function gestionarCompra(e) {
+
+    const item = {
+        nombre : e.currentTarget.parentElement.parentElement.children[1].children[0].textContent,
+        precio : e.currentTarget.parentElement.parentElement.children[1].children[1].textContent.split(" ")[1]
+    }
+
+    item.nombre = item.nombre.trimStart(item.nombre);
+    item.nombre = item.nombre.trimEnd(item.nombre);
+    const body = { 
+        method: 'POST',
+        body: JSON.stringify(item)
+    };
+
+    console.log(body);
+
+    if(item.nombre == "Cofre"){
+        const urlSkin = `http://localhost/proyectoFinal/api/v1/superSpikes/Shop/ChestBougth`;
+    
+        fetch(urlSkin, body)
+        .then(respuesta => respuesta.json())
+        .then(respuesta => {
+                
+        }).catch(error => {
+            console.error(error);
+        });
+        return;
+    }
+    const urlSkin = `http://localhost/proyectoFinal/api/v1/superSpikes/Shop/SkinBougth`;
+    
+    fetch(urlSkin, body)
+    .then(respuesta => respuesta.json())
+    .then(respuesta => {
+            
+    }).catch(error => {
+        console.error(error);
+    });
 
 }
 

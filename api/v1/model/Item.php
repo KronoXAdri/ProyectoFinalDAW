@@ -163,6 +163,31 @@
             }
         }
 
+        public static function comprarItem($idUsuario, $idSkin, $nuevosPuntosUser, $fecha){
+            try {
+                $sql = "INSERT INTO `usuarioskin` VALUES (:idUsuario, :idSkin)";
+
+                $conexion = Conectar::conexion();
+                $conexion->beginTransaction();
+                $consulta = $conexion->prepare($sql);
+
+                $consulta->bindParam(":idUsuario", $idUsuario);
+                $consulta->bindParam(":idSkin", $idSkin);
+
+                $idCompra = Compra::realizarCompra($fecha, $conexion);
+                Compra::insertarSkinCompra($idSkin, $idUsuario, $idCompra, $conexion);
+                User::actualizarPuntos($nuevosPuntosUser, $idUsuario, $conexion);
+                $conexion->commit();
+                $consulta->closeCursor();
+                $consulta->execute();
+                
+            } catch (Throwable $e) {
+                $conexion->rollBack();
+                echo "En la línea "  . $e->getLine() . ' en el archivo ' . $e->getFile() . ': <br>';
+                echo "<br>Mensaje de error:" . $e->getMessage();
+            }
+        }
+
         public static function getCountItems(){
 
             if(!self::getTotalSkinsCharacter()){
@@ -268,6 +293,40 @@
 
             $skin = new ItemDTO($skinData["NOMBRE"], $skinData["TIPO"], 0);
             echo json_encode(array("skinEquipada" => $skin));
+            return header(ERROR["OK"]);
+        }
+
+        public static function bougthSkin($datos, $valoresQuery){
+            $nombreSkin = $datos["nombre"];
+            $precio = $datos["precio"];
+            $aliasUser = $valoresQuery;
+
+            if(!User::existsUserByAlias($aliasUser)){
+                return header(ERROR["No Content"]);
+            }
+
+            $userData = User::existsUserByAlias($aliasUser);
+            $skinData = self::getSkinDataByName($nombreSkin);
+
+            
+            if(!$skinData || $skinData["PRECIO"] != $precio || $userData[0]["PUNTOS_COMPRA"] < $skinData["PRECIO"]){
+                return header(ERROR["Bad Request"]);
+            }
+            
+            $hasSkinUser = self::hasSkinUser($userData[0]["ID_USUARIO"],$skinData["ID_SKIN"]);
+
+            if($hasSkinUser){
+                return header(ERROR["Bad Request"]);
+            }
+
+            $puntosNuevosUser = (int) $userData[0]["PUNTOS_COMPRA"] - (int) $skinData["PRECIO"];
+
+            $fecha = date("Y-m-d H:i:s");
+
+            self::comprarItem($userData[0]["ID_USUARIO"],$skinData["ID_SKIN"],$puntosNuevosUser, $fecha);
+
+            $skin = new CompraDTO($userData[0]["ALIAS"], $skinData["NOMBRE"], $fecha);
+            echo json_encode(array("compra" => $skin));
             return header(ERROR["OK"]);
         }
    }

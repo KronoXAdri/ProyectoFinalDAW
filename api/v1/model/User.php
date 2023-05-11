@@ -59,6 +59,23 @@
         
         }
 
+        public static function actualizarPuntos($puntosUser, $idUser, &$conexion){
+            try {
+                $sql = "UPDATE `usuario` SET usuario.puntos_compra = :puntosNuevos WHERE usuario.id_usuario = :userId;";
+         
+                $consulta = $conexion->prepare($sql);
+                $consulta->bindParam(":userId", $idUser);
+                $consulta->bindParam(":puntosNuevos", $puntosUser);
+                $consulta->execute();
+                
+            } catch (Throwable $e) {
+                $conexion->rollBack();
+                echo "En la línea "  . $e->getLine() . ' en el archivo ' . $e->getFile() . ': <br>';
+                echo "<br>Mensaje de error:" . $e->getMessage();
+            }
+        
+        }
+
         public static function login($data){
             $data = mb_split(";", $data);
 
