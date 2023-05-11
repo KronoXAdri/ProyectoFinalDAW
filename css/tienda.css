@@ -156,6 +156,10 @@ main{
     visibility: hidden;
 }
 
+.borde-error{
+    border: 3px solid red;
+}
+
 /* ANIMACIONES */
 
 .animacion-rebote{
@@ -190,5 +194,37 @@ main{
 
 	100% {
 		transform: scale3d(1, 1, 1);
+	}
+}
+
+.animacion-error{
+    animation: error 1s ease 0s 1 normal forwards;
+}
+
+@keyframes error {
+	0%,
+	100% {
+		transform: translateX(0);
+	}
+
+	10%,
+	30%,
+	50%,
+	70% {
+		transform: translateX(-10px);
+	}
+
+	20%,
+	40%,
+	60% {
+		transform: translateX(10px);
+	}
+
+	80% {
+		transform: translateX(8px);
+	}
+
+	90% {
+		transform: translateX(-8px);
 	}
 }

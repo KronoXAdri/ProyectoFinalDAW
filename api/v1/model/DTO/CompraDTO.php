@@ -3,12 +3,14 @@
    class CompraDTO{
 
         public $aliasUsuario;
+        public $puntosUsuario;
         public $nombreSkin;    
         public $fechaCompra;
 
-        function __construct($aliasUsuario, $nombreSkin, $fechaCompra){
+        function __construct($aliasUsuario, $puntosUsuario, $nombreSkin, $fechaCompra){
             
             $this->aliasUsuario = $aliasUsuario;
+            $this->puntosUsuario = $puntosUsuario;
             $this->nombreSkin = $nombreSkin;
             $this->fechaCompra = $fechaCompra;
         }
@@ -70,6 +72,26 @@
         public function setAliasUsuario($aliasUsuario)
         {
                 $this->aliasUsuario = $aliasUsuario;
+
+                return $this;
+        }
+
+        /**
+         * Get the value of puntosUsuario
+         */ 
+        public function getPuntosUsuario()
+        {
+                return $this->puntosUsuario;
+        }
+
+        /**
+         * Set the value of puntosUsuario
+         *
+         * @return  self
+         */ 
+        public function setPuntosUsuario($puntosUsuario)
+        {
+                $this->puntosUsuario = $puntosUsuario;
 
                 return $this;
         }

@@ -1,0 +1,39 @@
+.containered{
+    background-color: white;
+    border-color: black;
+    border-style: solid;
+    -webkit-border-radius: 80px 80px 80px 80px;
+    border-radius: 80px 80px 80px 80px; 
+}
+
+.h-60{
+    height: 60vh;
+}
+
+.fondo{
+    background-color: #ecc558;
+}
+
+main{
+    height: 80vh;
+}
+
+
+/* ANIMACIONES */
+.work-in-progress{
+    animation: work-in-progress 1.5s ease 0.5s 1 normal backwards;
+}
+
+@keyframes work-in-progress {
+	0% {
+		opacity: 0;
+		transform: rotateX(-100deg);
+		transform-origin: top;
+	}
+
+	100% {
+		opacity: 1;
+		transform: rotateX(0deg);
+		transform-origin: top;
+	}
+}

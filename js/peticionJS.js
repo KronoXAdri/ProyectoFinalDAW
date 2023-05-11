@@ -12,7 +12,7 @@ function gestionarPeticion(e) {
     fetch(url)
     .then(respuesta => respuesta.json())
     .then(respuesta => {
-            sessionStorage.setItem("usuario", JSON.stringify(respuesta));
+            sessionStorage.setItem("usuario", JSON.stringify(respuesta.usuario));
             window.location="src/main.html";
     }).catch(error => {
         correo.style.color = "red";

@@ -56,10 +56,19 @@
                 }
                     Item::bougthSkin($data,$valoresQuery);
             }else{
+            if($nombresVarQuery == "alias" && $camposPath[1] == "Shop" && $camposPath[2] == "ChestBougth"){
+                $data = json_decode(file_get_contents('php://input'), true);
+                
+                if(empty($data) || (!isset($data["nombre"]) || empty($data["nombre"]) || (!isset($data["nombre"]) || empty($data["precio"])))){
+                    return header(ERROR["Bad Request"]);
+                }
+                    Item::bougthChest($data,$valoresQuery);
+            }else{
                 return header(ERROR["Bad Request"]);
             }
 
+            }
         }
-}
+    }
 
 ?> 

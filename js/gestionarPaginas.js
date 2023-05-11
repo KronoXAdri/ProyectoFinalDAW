@@ -13,7 +13,7 @@ function initFlechas() {
     if(!noChecked){
         url = "http://localhost/proyectoFinal/api/v1/superSpikes/Shop/Items";
     }else{
-        const datosSesion = JSON.parse(sessionStorage.getItem("usuario")).usuario;
+        const datosSesion = JSON.parse(sessionStorage.getItem("usuario"));
         url = `http://localhost/proyectoFinal/api/v1/superSpikes/Shop/ItemsBougths?correo=${datosSesion.correo}`; 
     }
 
@@ -144,7 +144,7 @@ function rellenarItems(items) {
 
 function equiparSkin(e) {
     let nombreItem = e.currentTarget.children[1].children[0].textContent;
-    let datosSesion = JSON.parse(sessionStorage.getItem("usuario")).usuario;
+    let datosSesion = JSON.parse(sessionStorage.getItem("usuario"));
 
     nombreItem = nombreItem.trimStart();
     nombreItem = nombreItem.trimEnd();
@@ -208,7 +208,7 @@ idle.addEventListener("click", irAIdle);
 const miSkin = document.querySelector(".my-skin");
 
 function cargarMiSKin() {
-    const datosSesion = JSON.parse(sessionStorage.getItem("usuario")).usuario;
+    const datosSesion = JSON.parse(sessionStorage.getItem("usuario"));
 
     const urlSkin = `http://localhost/proyectoFinal/api/v1/superSpikes/Shop/UserSkinEquiped?correo=${datosSesion.correo}`;
 
@@ -258,7 +258,7 @@ imagenCheck.classList.add("h-100");
 imagenCheck.draggable = false;
 
 function initCompradas() {
-    const datosSesion = JSON.parse(sessionStorage.getItem("usuario")).usuario;
+    const datosSesion = JSON.parse(sessionStorage.getItem("usuario"));
     const urlSkin = `http://localhost/proyectoFinal/api/v1/superSpikes/Shop/UserSkinBougths?correo=${datosSesion.correo}`;
 
     fetch(urlSkin)

@@ -149,10 +149,51 @@
                 $sql = "SELECT * FROM skin where nombre = :nombreSkin;";
          
                 $consulta = Conectar::conexion()->prepare($sql);
-                $consulta->bindParam(":nombreSkin", $nombreSkin) ;
+                $consulta->bindParam(":nombreSkin", $nombreSkin);
                 $consulta->execute();
             
                 $datos = $consulta->fetch(PDO::FETCH_ASSOC);
+                
+                $consulta->closeCursor();
+                return (!empty($datos))? $datos : false;
+                
+            } catch (Throwable $e) {
+                echo "En la línea "  . $e->getLine() . ' en el archivo ' . $e->getFile() . ': <br>';
+                echo "<br>Mensaje de error:" . $e->getMessage();
+            }
+        }
+
+        public static function allSkinUser($userId){
+            try {
+                $sql = "SELECT * FROM usuarioskin where id_usuario = :userId;";
+         
+                $consulta = Conectar::conexion()->prepare($sql);
+                $consulta->bindParam(":userId", $userId);
+                $consulta->execute();
+            
+                while ($filas = $consulta->fetch(PDO::FETCH_ASSOC)) {
+                    $datos[] = $filas;
+                }
+                
+                $consulta->closeCursor();
+                return (!empty($datos))? $datos : false;
+                
+            } catch (Throwable $e) {
+                echo "En la línea "  . $e->getLine() . ' en el archivo ' . $e->getFile() . ': <br>';
+                echo "<br>Mensaje de error:" . $e->getMessage();
+            }
+        }
+
+        public static function getAllSkins(){
+            try {
+                $sql = "SELECT * FROM skin where nombre like 'Character%';";
+         
+                $consulta = Conectar::conexion()->prepare($sql);
+                $consulta->execute();
+            
+                while ($filas = $consulta->fetch(PDO::FETCH_ASSOC)) {
+                    $datos[] = $filas;
+                }
                 
                 $consulta->closeCursor();
                 return (!empty($datos))? $datos : false;
@@ -325,7 +366,53 @@
 
             self::comprarItem($userData[0]["ID_USUARIO"],$skinData["ID_SKIN"],$puntosNuevosUser, $fecha);
 
-            $skin = new CompraDTO($userData[0]["ALIAS"], $skinData["NOMBRE"], $fecha);
+            $skin = new CompraDTO($userData[0]["ALIAS"], $puntosNuevosUser, $skinData["NOMBRE"], $fecha);
+            echo json_encode(array("compra" => $skin));
+            return header(ERROR["OK"]);
+        }
+
+        public static function bougthChest($datos, $valoresQuery){
+            $nombreItem = $datos["nombre"];
+            $precio = $datos["precio"];
+            $aliasUser = $valoresQuery;
+
+            if(!User::existsUserByAlias($aliasUser)){
+                return header(ERROR["No Content"]);
+            }
+
+            $userData = User::existsUserByAlias($aliasUser);
+           
+            if($userData[0]["PUNTOS_COMPRA"] < $precio){
+                return header(ERROR["Bad Request"]);
+            }
+            
+            $skinsUser = self::allSkinUser($userData[0]["ID_USUARIO"]);
+            $allSkins = self::getAllSkins();          
+
+            $skinsNoPoseidas = [];
+
+            foreach ($allSkins as $skin) {
+                $isInPossesion = false;
+                foreach ($skinsUser as $skinUser) {
+                    if($skinUser["ID_SKIN"] == $skin["ID_SKIN"]){
+                        $isInPossesion = true;
+                        break;
+                    }
+                }
+                if(!$isInPossesion){
+                    array_push($skinsNoPoseidas, $skin);
+                }
+            }
+
+            $numero_aleatorio = mt_rand(0,(count($skinsNoPoseidas) - 1));
+
+            $puntosNuevosUser = (int) $userData[0]["PUNTOS_COMPRA"] - (int) $precio;
+
+            $fecha = date("Y-m-d H:i:s");
+
+            self::comprarItem($userData[0]["ID_USUARIO"],$skinsNoPoseidas[$numero_aleatorio]["ID_SKIN"],$puntosNuevosUser, $fecha);
+
+            $skin = new CompraDTO($userData[0]["ALIAS"], $puntosNuevosUser, $skinsNoPoseidas[$numero_aleatorio]["NOMBRE"], $fecha);
             echo json_encode(array("compra" => $skin));
             return header(ERROR["OK"]);
         }

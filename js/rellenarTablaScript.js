@@ -16,7 +16,7 @@ function rellenarTabla() {
 function dibujarTabla(listaUsuarios) {
     let posicion = 1;
 
-    const userLogged  = JSON.parse(sessionStorage.getItem("usuario")).usuario;
+    const userLogged  = JSON.parse(sessionStorage.getItem("usuario"));
 
     console.log(userLogged);
 
