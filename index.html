@@ -13,7 +13,7 @@
         <img src="./resources/img/silenciado.png" alt="Altavoz" id="silencio" class="imagenes-audio">
         <audio src="./resources/music/mainThemeDoom.mp3" autoplay loop id="musica"></audio>
         <div class="alinear-form color-fondo-azul d-flex flex-column justify-content-center align-items-center">
-             <form action="#" method="post" class="color-fondo-blanco borde-formulario d-flex flex-column justify-content-center align-items-center">
+             <form action="#" method="post" class="color-fondo-blanco borde-formulario d-flex flex-column justify-content-evenly align-items-center">
                 <div class="w-100 texto-centro">
                     <h1 class="retro color-letra-negro sombra-texto">Inicio de Sesión</h1>
                 </div>
@@ -25,8 +25,16 @@
                     <label for="inputPassword" class="retro"> Contraseña </label>
                     <input type="password" name="password" id="inputPassword" class="form-control w-100 h-100" placeholder="Password">
                 </div>
-                <div class="w-50">
+                <div class="w-50 mt-3">
                     <input type="submit" value="Enviar" class="form-control btn btn-dark btn-lg" id="boton">
+                </div>
+                <div class="w-100 d-flex flex-row align-items-center justify-content-evenly retro">
+                    <div class="sin-cuenta cursor">
+                        <p class="no-margin"> ¿Aún sin cuenta? </p>
+                    </div>
+                    <div class="invitado cursor">
+                        <p class="no-margin"> Acceso Invitado </p>
+                    </div>
                 </div>
              </form>
         </div>
@@ -36,5 +44,6 @@
         <script src="js/controlaSonido.js"></script>
         <script src="js/controlaCharacter.js"></script>
         <script src="js/peticionJS.js"></script>
+        <script src="js/controlSinCuentaYAccesoInvitado.js"></script>
     </body>
 </html>

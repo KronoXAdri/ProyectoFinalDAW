@@ -13,7 +13,13 @@ function gestionarPeticion(e) {
     .then(respuesta => respuesta.json())
     .then(respuesta => {
             sessionStorage.setItem("usuario", JSON.stringify(respuesta.usuario));
+
+            if(respuesta.usuario.admin == 1){
+                window.location="src/admin.html";
+                return;
+            }
             window.location="src/main.html";
+            
     }).catch(error => {
         correo.style.color = "red";
         correo.value = "Error, Email o Contraseña no válidos."
